@@ -1,0 +1,255 @@
+//分享
+$(function(){
+    $(".wechat").click(function () {//微信
+        var url=$(this).data("img")
+        var title=""
+        title+="<div class='weixin-box'>"
+        title+="<i class='c'>x</i>"
+        title+="<h2>微信二维码</h2>"
+        title+="<div class='img'><img src='"+ url +"' width='100px;' height='100px;'></div>"
+        title+="<p>扫一扫</p>"
+        title+="</div>"
+        $("body").remove(".weixin");
+        $("body").append(title)
+        //var op="http://service.weibo.com/share/share.php?url='"+ url +"'&title='"+ title +"'&searchPic=false"
+        //window.open(op)
+    })
+    
+    $(document).on("click",".weixin-box .c",function(){
+        $(".weixin-box").remove();
+    })
+
+})
+
+$(function () {
+    wowInt();
+    findTel();
+    phoneTargetSelf();
+    mainNav();
+    fontSize();
+
+    $(window).resize(function() {
+          mainNav();
+    });
+
+
+    //--------------公用选项卡切换
+    $(".tab-box .tab-a").each(function() {
+        $(this).click(function() {
+            $(this).addClass("on").siblings().removeClass("on");
+            var ii=$(this).index();
+            //$.getScript("../js/ratio-img.js");
+            $(this).parents(".tab-box").find(".tab-b").eq(ii).show().siblings().hide();
+        });   
+    })
+    $(".tab-box").each(function (i) {
+        $(this).find(".tab-a:eq(0)").click();
+    });
+    //end
+})
+
+$(window).scroll(function(){
+    var top = $(window).scrollTop();
+    var head_h = $(".site_header").height();
+    if(top>=head_h){
+        $(".site_header_area").addClass('fixeded');
+    }
+    else{
+        $(".site_header_area").removeClass('fixeded');
+    }
+});
+
+
+
+function mainNav(){
+
+    //导航
+    $(document).on('click','.nav_btn',function(){
+        if($("body").hasClass("pBody")){
+            $("body").removeClass("pBody");
+            $(".main_nav_overlay").fadeOut(300);
+        }else{
+            $("body").addClass("pBody");
+        }
+    })
+
+    $(document).on('click','.modal_close',function(){
+          $("body").removeClass("pBody");
+    })
+
+
+   
+    $(document).on('click','.arrow_box',function(){
+         $(this).toggleClass('reverse');
+         $(this).parent(".nav_item").find(".subnav").toggleClass("on");
+         //$(this).parent(".nav_item").find(".subnav").toggle(300);
+    })
+
+  
+    //导航
+}
+
+function wowInt(){
+    if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))){
+        var wow = new WOW({
+            boxClass: 'wow',
+            animateClass: 'animated',
+            offset: 0,
+            mobile: false,
+            live: true
+        });
+        wow.init();
+    };
+}
+
+
+/*手机端链接改为本窗口打开*/
+function phoneTargetSelf(context){  
+  if ($(window).width()<1024) {
+    if(context==undefined){
+      context=$(document);
+    }
+    $('a',context).each(function(){
+      var target=$(this);
+      var link=target.attr('target');
+      target.attr('target','_self');
+    })
+  }
+}
+
+
+/*电话链接取消默认事件并添加样式*/
+function findTel(context){
+  if ($(window).width()>1024) {
+    var condition = /^tel\:([0-9\-]+)|tel\:\+([0-9\-]+)$/;
+    if(context==undefined){
+      context=$(document);
+    }
+    $('a',context).each(function(index, el) {
+      var target=$(this);
+      var href=target.attr('href');
+      if (condition.test(href)) {
+        target.addClass('tel_link');
+        target.on('click',function(event){
+          event.preventDefault();
+        })
+      }
+    });
+  }
+}
+
+
+/*内容页文章字体切换*/
+function fontChange(changeFont,articleClass){
+    var article=$(articleClass);
+    if (changeFont=='big') {
+        article.css('font-size','18px')
+    }
+    if (changeFont=='medium') {
+        article.css('font-size','16px')
+    }
+    if (changeFont=='small') {
+        article.css('font-size','14px')
+    }
+}
+function fontSize(){
+    $('.a_size i.samll').addClass("on").siblings().removeClass("on");
+    $(document).on("click",".a_size i",function(){
+        $(this).addClass('on').siblings().removeClass('on');
+    })
+    $('i.big').click(function () {
+        $('#print_cont .edit_con_original').css({ 'font-size': '16px', 'line-height': '2' });
+    })
+    $('i.small').click(function () {
+        $('#print_cont .edit_con_original').css({ 'font-size': '14px', 'line-height': '1.8' });
+    })
+}
+
+// 打印
+function doPrint(){
+    $("#print_cont").jqprint();
+ }
+
+
+//ie7、8支持placeholder
+$(function(){
+if(!placeholderSupport()){   
+    $('[placeholder]').focus(function() {
+        var input = $(this);
+        if (input.val() == input.attr('placeholder')) {
+            input.val('');
+            input.removeClass('placeholder');
+        }
+    }).blur(function() {
+        var input = $(this);
+        if (input.val() == '' || input.val() == input.attr('placeholder')) {
+            input.addClass('placeholder');
+            input.val(input.attr('placeholder'));
+        }
+    }).blur();
+};
+})
+function placeholderSupport() {
+    return 'placeholder' in document.createElement('input');
+}
+
+
+//回顶部
+$(function () {
+    var gotop = $('<a  class="returnTop J_returnTop" href="javascript:;">top</a>').hide().appendTo(document.body);
+    var visiable = false;
+    gotop.bind('click', function () {
+        $('html,body').animate({
+            scrollTop: 0
+        });
+        return false;
+    });
+
+
+    var wi = 1660;
+
+    $(window).resize(function () {
+        if ($(window).width() <= 1500) {
+            wi = 1400;
+        }
+
+        if ($(window).width() <= 1450) {
+            wi = 1200;
+        }
+
+        if ($(window).width() <= 1250) {
+            wi = 1000;
+        }
+
+        if ($(window).width() <= 1000) {
+            wi = 760;
+        }
+
+        if ($(window).width() <= 767) {
+            gotop.remove();
+        }
+    })
+
+    var resize = function () {
+       //gotop.css('left', ($(window).width() - wi) / 2 + wi);
+    };
+    resize();
+
+    $(window).bind('resize', resize);
+    $(window).scroll(function () {
+        var top = $(window).scrollTop();
+        if (top > 10) {
+            if (!visiable) {
+                gotop.fadeIn();
+                visiable = 1;
+            }
+        } else {
+            if (visiable) {
+                gotop.fadeOut();
+                visiable = 0;
+            }
+        }
+    });
+});
+
+
