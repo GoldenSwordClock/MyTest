@@ -1,0 +1,73 @@
+$(document).ready(function () {
+	    //banner
+        var mySwiper = new Swiper('.inbanner .swiper-container', {
+        	onInit: function(swiper){ //Swiper2.x的初始化是onFirstInit
+				    swiperAnimateCache(swiper); //隐藏动画元素 
+				    swiperAnimate(swiper); //初始化完成开始动画
+				  }, 
+		    onSlideChangeEnd: function(swiper){ 
+				    swiperAnimate(swiper); //每个slide切换结束时也运行当前slide动画
+				  },
+
+				loop : true,
+				autoplay: 6000,//可选选项，自动滑动
+				autoplayDisableOnInteraction: false,//用户操作swiper之后自动切换不会停止
+				pagination: '.swiper-pagination',
+				paginationClickable: true,
+				prevButton:'.inbanner .swiper-button-prev',
+		        nextButton:'.inbanner .swiper-button-next',
+
+		})
+		//end
+
+		if($(window).width()>767){
+        	var mySwiper2 = new Swiper('.index_part1 .swiper-container', {
+				loop : true,
+				autoplay: 5000,
+				slidesPerView : 3,
+				slidesPerGroup : 1,
+				spaceBetween : 15,
+				prevButton:'.index_part1 .swiper-button-prev',
+				nextButton:'.index_part1 .swiper-button-next',
+			})
+
+        }
+    	else{
+    		var mySwiper2 = new Swiper('.index_part1 .swiper-container', {
+				loop : true,
+				autoplay: 5000,
+				slidesPerView : 1,
+				slidesPerGroup : 1,
+				spaceBetween : 10,
+				prevButton:'.index_part1 .swiper-button-prev',
+				nextButton:'.index_part1 .swiper-button-next',
+			})
+    	}
+    	if($(".index_part1 .swiper-slide").size()<=3){
+    		$(".index_part1 .swiper-button-prev,.index_part1 .swiper-button-next").hide();
+    	}
+
+
+    	$(".site_nav_down_prompt").click(function() {
+    		/* Act on the event */
+    		var scroll_offset = $(".index_part1").offset();
+			$("body,html").animate({			
+				 scrollTop:scroll_offset.top //让body的scrollTop等于pos的top，就实现了滚动
+			},800);
+			$(this).addClass('hide');
+    	});
+
+
+    
+})
+
+
+$(window).scroll(function(){
+		var top = $(window).scrollTop();
+		if(top>10){
+		    $(".site_nav_down_prompt").addClass('hide')
+		}
+		else{
+		    $(".site_nav_down_prompt").removeClass('hide');
+		}
+});

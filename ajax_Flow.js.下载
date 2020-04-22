@@ -1,0 +1,74 @@
+﻿
+var http_request = false;
+function send_request(content) {
+    http_request = false;
+    if (window.XMLHttpRequest) { //Mozilla 
+        http_request = new XMLHttpRequest();
+        if (http_request.overrideMimeType) {
+            http_request.overrideMimeType("text/xml");
+        }
+    } else if (window.ActiveXObject) { //IE
+        try {
+            http_request = new ActiveXObject("Msxml2.XMLHTTP");
+        } catch (e) {
+            try {
+                http_request = new ActiveXObject("Microsoft.XMLHTTP");
+            } catch (e) { }
+        }
+    }
+
+    if (!http_request) {
+        window.alert("Can't create XMLHttpRequest");
+        return false;
+    }
+    http_request.onreadystatechange = processTextResponse;
+    http_request.open("post", "/ajax/AjaxHandler.ashx", true);
+    http_request.setRequestHeader("content-Type", "application/x-www-form-urlencoded");
+
+//    if (responseType.toLowerCase() == "text") {
+//        //http_request.onreadystatechange = processTextResponse;
+//        http_request.onreadystatechange = callback;
+//    } else if (responseType.toLowerCase == "xml") {
+//        //http_request.onreadystatechange = processXMLResponse;
+//        http_request.onreadystatechange = callback;
+//    } else {
+//        window.alert("error");
+//        return false;
+//    }
+
+//    if (method.toLowerCase() == "get") {
+//        http_request.open(method, url, true);
+//    } else if (method.toLowerCase() == "post") {
+//        http_request.open(method, url, true);
+//        http_request.setRequestHeader("content-Type", "application/x-www-form-urlencoded");
+//    } else {
+//        window.alert("http request error");
+//        return false;
+//    }
+   http_request.send(content);
+}
+
+function processTextResponse() {
+
+    if (http_request.readyState == 4) {
+        if (http_request.status == 200) {
+            //alert(http_request.responseText);
+            if (http_request.responseText == "Access_Abandonned") {
+                document.body.innerHTML = "您无权查看本页面!";
+            }
+        } else {
+           // alert("request error");
+        }
+    }
+}
+
+function processXMLResponse() {
+    if (http_request.readyState == 4) {
+        if (http_request.status == 200) {
+            alert(http_request.responseXML);
+        } else {
+            //alert("request error");
+        }
+    }
+}
+
